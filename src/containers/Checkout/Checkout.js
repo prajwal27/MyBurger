@@ -1,16 +1,18 @@
 import React, { Component } from "react";
-import CheckoutSummary from "../../components/Order/CheckoutSummary/CheckoutSummary";
 import { Route } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+import CheckoutSummary from "../../components/Order/CheckoutSummary/CheckoutSummary";
 import ContactData from './ContactData/ContactData';
 
 
 class Checkout extends Component {
-  state = {
+  /* state = {
     ingredients: null,
     price: 0
-  };
+  }; */
 
-  componentWillMount () {
+  /* componentWillMount () {
     const query = new URLSearchParams( this.props.location.search );
     const ingredients = {};
     let price = 0;
@@ -23,7 +25,7 @@ class Checkout extends Component {
         }
     }
     this.setState( { ingredients: ingredients, totalPrice: price } );
-}
+} */
 
   checkoutContinuedHandler = () => {
     this.props.history.replace('/checkout/contact-data');
@@ -38,15 +40,25 @@ class Checkout extends Component {
     return (
       <div>
         <CheckoutSummary
-          ingredients={this.state.ingredients}
+          //ingredients={this.state.ingredients}
+          ingredients={this.props.ings}
           checkoutCancelled={this.checkoutCancelledHandler}
           checkoutContinued={this.checkoutContinuedHandler}/>
           <Route 
               path={this.props.match.path + '/contact-data'} 
-              render={(props) => (<ContactData ingredients={this.state.ingredients} price={this.state.totalPrice} {...props} />)} />
+              component={ContactData}
+              //render={(props) => (<ContactData ingredients={this.state.ingredients} price={this.state.totalPrice} {...props} />)}
+               />
       </div>
     );
   }
 }
 
-export default Checkout;
+const mapStateToProps = state => {
+  return {
+      ings: state.ingredients
+  }
+}
+
+export default connect(mapStateToProps)(Checkout);
+//export default Checkout;
